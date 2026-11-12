@@ -1,0 +1,11 @@
+ASSAY is licensed in two parts.
+
+1. Specification text (spec/ and this README and other prose): Creative Commons
+   Attribution 4.0 International (SPDX: CC-BY-4.0). See LICENSE-CC-BY-4.0.md.
+
+2. Schemas, examples, templates, scripts and other code (schemas/, examples/,
+   templates/, scripts/, .github/): Apache License 2.0 (SPDX: Apache-2.0).
+   See LICENSE-APACHE-2.0.
+
+Status: proposed by the author and confirmed on 2026-11-12. The CC BY 4.0 legal
+code must be added to LICENSE-CC-BY-4.0.md before the first public release.

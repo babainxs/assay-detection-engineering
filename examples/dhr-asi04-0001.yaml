@@ -1,0 +1,35 @@
+id: dhr-asi04-0001
+title: MCP server tool description changed after approval
+version: 1
+status: testable
+owner: detection-engineering
+track: defend-ai
+tier: t-invest
+threat:
+  owasp_asi: ASI04
+  atlas: { id: AML.T0110, release: v2026.09 }
+hypothesis:
+  behavior: A previously approved MCP server publishes a changed tool description or schema.
+  observable: tools/list hash differs from the approved hash with no linked change.
+  data_source: mcp_lifecycle
+prerequisites:
+  telemetry: [mcp_lifecycle]
+  min_readiness: T3
+rule:
+  path: rules/mcp/tool_description_changed.yml
+exclusions:
+  owner: detection-engineering
+  notes: Approved changes carry a change reference and are filtered.
+tests:
+  positives: fixtures/mcp/description_change_positive.json
+  negatives: fixtures/mcp/description_change_approved.json
+  emulation: scenarios/mcp_rug_pull_sandbox
+  noise_budget_per_day: 2
+response:
+  runbook: runbooks/mcp-description-change.md
+  action: none
+provenance:
+  authored_by: { model: example-model, run: run-0001 }
+  reviewed_by: analyst-a
+review:
+  next: 2027-02-11

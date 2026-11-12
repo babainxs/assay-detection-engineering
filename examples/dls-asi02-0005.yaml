@@ -1,0 +1,32 @@
+dls: "0.1"
+dhr: dhr-asi02-0005
+inputs:
+  - class: tool_call
+    fields: [agent.id, session.id, principal.on_behalf_of, tool.category, data.classification, destination.domain, destination.approved]
+correlate:
+  by: [agent.id, session.id]
+logic:
+  sequence:
+    - step: read_sensitive
+      where: { tool.category: read, data.classification: [confidential, restricted] }
+    - step: send_external
+      where: { tool.category: send, destination.approved: false }
+  order: strict
+  window: 10m
+baseline:
+  mode: boundary
+exclusions:
+  - id: ex-1
+    owner: detection-engineering
+    scope: { agent.role: support-triage, destination.domain: crm.example.com }
+    expires: 2027-05-12
+    counter_test: fixtures/ex-1-other-destinations-still-detected.json
+on_missing_field: alert_telemetry_gap
+output:
+  severity: high
+  subject: [agent.id, principal.on_behalf_of]
+  evidence: [read_sensitive, send_external]
+tests:
+  positives: fixtures/read_export_positive.json
+  negatives: fixtures/read_export_benign.json
+  variants: fixtures/read_export_variants.json
